@@ -82,25 +82,25 @@ int main()
     setlocale(LC_ALL, "RU");
     int size = 0;
 
-    std::cout << "Введите размер матрицы: ";
+    std::cout << "Enter matrix size: ";
     std::cin >> size;
     if (size <= 0)
     {
-        std::cout << "Вы ввели некорректный размер матрицы." << std::endl;
+        std::cout << "Invalid matrix size." << std::endl;
         system("pause");
         return EXIT_FAILURE;
     }
 
     c_matrix m(size);
 
-    std::cout << "Введите матрицу:" << std::endl;
+    std::cout << "Enter the matrix:" << std::endl;
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             float in;
             std::cin >> in;
 
             if (std::cin.fail()) {
-                std::cout << "Вы ввели некорректное значение." << std::endl;
+                std::cout << "Invalid value." << std::endl;
 
                 system("pause");
                 return EXIT_FAILURE;
@@ -111,7 +111,7 @@ int main()
         }
     }
 
-    std::cout << "Определитель матрицы: " << m.get_determinant() << "." << std::endl;
+    std::cout << "Matrix determinant is: " << m.get_determinant() << "." << std::endl;
 
     system("pause");
     return EXIT_SUCCESS;
