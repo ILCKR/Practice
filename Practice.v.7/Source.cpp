@@ -3,72 +3,116 @@
 class c_matrix
 {
 public:
-    c_matrix(int a, int b)
+    c_matrix(int a)
     {
-        a_size = a;
-        b_size = b;
+        size = a;
 
         m = new float* [a];
 
         for (int i = 0; i < a; i++)
-            m[i] = new float[b];
+            m[i] = new float[a];
     };
 
-
-    void fill(float val)
+    /* /void print()
     {
-        for (int i = 0; i < a_size; i++)
+        for (int i = 0; i < size; i++)
         {
-            for (int j = 0; j < b_size; j++)
-            {
-                m[i][j] = val;
-            }
-        }
-    };
-
-
-    void print()
-    {
-        for (int i = 0; i < a_size; i++)
-        {
-            for (int j = 0; j < b_size; j++)
+            for (int j = 0; j < size; j++)
             {
                 std::cout << m[i][j] << " ";
             }
 
             std::cout << std::endl;
         }
-    };
+    }; */
 
+    c_matrix transponier()
+    {
+        c_matrix res(size);
+
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                res.m[i][j] = m[i][j];
+            }
+        }
+
+        float tmp;
+        for (int k = 0; k < size - 1; k++) {
+            for (int i = k + 1; i < size; i++) {
+                tmp = -res.m[i][k] / res.m[k][k];
+                for (int j = 0; j < size; j++) {
+                    res.m[i][j] += res.m[k][j] * tmp;
+                }
+            }
+        }
+
+        return res;
+    }
 
     float get_determinant()
     {
-        if (a_size == 2 && b_size == 3)
+        c_matrix nn = transponier();
+
+       // nn.print();
+
+        float sum = 1;
+        for (int i = 0; i < size; i++)
         {
-            std::cout << "got 2 order matrix" << std::endl;
-        }
-        else if (a_size == 3 && b_size == 3)
-        {
-            std::cout << "got 3 order matrix" << std::endl;
+            if (nn.m[i][i] != nn.m[i][i]) {
+                sum = 0;
+                break;
+            }
+
+            sum *= nn.m[i][i];
         }
 
-        return -1;
+        return sum;
     };
 
 private:
-    int a_size;
-    int b_size;
+    int size;
+public:
     float** m;
 };
 
 int main()
 {
-    c_matrix m{ 5, 5 };
+    setlocale(LC_ALL, "RU");
+    int size = 0;
 
-    m.fill(15);
+    std::cout << "Введите размер матрицы: ";
+    std::cin >> size;
+    if (size <= 0)
+    {
+        std::cout << "Вы ввели некорректный размер матрицы." << std::endl;
+        system("pause");
+        return EXIT_FAILURE;
+    }
 
-    m.print();
+    c_matrix m(size);
 
-    std::cin.get();
+    std::cout << "Введите матрицу:" << std::endl;
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            float in;
+            std::cin >> in;
+
+            if (std::cin.fail()) {
+                std::cout << "Вы ввели некорректное значение." << std::endl;
+
+                system("pause");
+                return EXIT_FAILURE;
+            }
+            else {
+                m.m[i][j] = in;
+            }
+        }
+    }
+
+    std::cout << "Определитель матрицы: " << m.get_determinant() << "." << std::endl;
+
+    system("pause");
     return EXIT_SUCCESS;
 }
