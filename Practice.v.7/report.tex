@@ -58,11 +58,9 @@
 
 \begin{enumerate}
  \item Нужно написать программу, которая вычисляет определитель матрицы.
- \item Пример кода, решающего данную задачу
- \item Скриншот программы
+ \item Код программы, решающей задачу.
+ \item Скриншот работы программы.
 \end{enumerate}
-
-Пример приведен в пункте~\ref{sec:exp} в пункте~\pageref{sec:exp}.
 
 \section{Ход работы}
 \label{sec:exp}
@@ -71,35 +69,138 @@
 \label{sec:exp:code}
 \begin{verbatim}
 
-% сурс
+#include <iostream>
+
+class c_matrix
+{
+public:
+    c_matrix(int a)
+    {
+        size = a;
+
+        m = new float* [a];
+
+        for (int i = 0; i < a; i++)
+            m[i] = new float[a];
+    };
+
+    /* /void print()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                std::cout << m[i][j] << " ";
+            }
+
+            std::cout << std::endl;
+        }
+    }; */
+
+    c_matrix transponier()
+    {
+        c_matrix res(size);
+
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                res.m[i][j] = m[i][j];
+            }
+        }
+
+        float tmp;
+        for (int k = 0; k < size - 1; k++) {
+            for (int i = k + 1; i < size; i++) {
+                tmp = -res.m[i][k] / res.m[k][k];
+                for (int j = 0; j < size; j++) {
+                    res.m[i][j] += res.m[k][j] * tmp;
+                }
+            }
+        }
+
+        return res;
+    }
+
+    float get_determinant()
+    {
+        c_matrix nn = transponier();
+
+       // nn.print();
+
+        float sum = 1;
+        for (int i = 0; i < size; i++)
+        {
+            if (nn.m[i][i] != nn.m[i][i]) {
+                sum = 0;
+                break;
+            }
+
+            sum *= nn.m[i][i];
+        }
+
+        return sum;
+    };
+
+private:
+    int size;
+public:
+    float** m;
+};
+
+int main()
+{
+    setlocale(LC_ALL, "RU");
+    int size = 0;
+
+    std::cout << "Enter matrix size: ";
+    std::cin >> size;
+    if (size <= 0)
+    {
+        std::cout << "Invalid matrix size." << std::endl;
+        system("pause");
+        return EXIT_FAILURE;
+    }
+
+    c_matrix m(size);
+
+    std::cout << "Enter the matrix:" << std::endl;
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            float in;
+            std::cin >> in;
+
+            if (std::cin.fail()) {
+                std::cout << "Invalid value." << std::endl;
+
+                system("pause");
+                return EXIT_FAILURE;
+            }
+            else {
+                m.m[i][j] = in;
+            }
+        }
+    }
+
+    std::cout << "Matrix determinant is: " << m.get_determinant() << "." << std::endl;
+
+    system("pause");
+    return EXIT_SUCCESS;
+}
 \end{verbatim}
-
-\subsection{Пример задачи}
-\label{sec:mathexample}
-
-Нахождение определителя матрицы 3х3:
-\begin{equation}\label{eq:solv}
- x_{1,2}=\frac{-b\pm\sqrt{b^2-4ac}}{2a}
-\end{equation}
 
 \section{Скриншот программы}
 \label{sec:picexample}
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.4\textwidth]{parabola.jpg}
-	\caption{Парабола}\label{fig:par}
+	\includegraphics[width=0.4\textwidth]{practice.jpg}
+	\caption{Работа программы}\label{fig:pra}
 \end{figure}
 
-Пример параболы представлен на рис.~\ref{fig:par}.
-
-\section{Пример библиографических ссылок}
-
-Для изучения «внутренностей» \TeX{} необходимо 
-изучить~\cite{Knuth-2003}, а для использования \LaTeX{} лучше
-почитать~\cite{Lvovsky-2003, Voroncov-2005}.
+Пример решения задачи представлен на рис.~\ref{fig:pra}.
 
 \begin{thebibliography}{9}
-\bibitem{Knuth-2003}Кнут Д.Э. Всё про \TeX. \newblock --- Москва: Изд. Вильямс, 2003 г. 550~с.
+\bibitem{Chakon}С. Чакон, Б. Штрауб. Git для профессионального программиста. \newblock --- Санкт-Петербург, 2016 г.
 \bibitem{Lvovsky-2003}Львовский С.М. Набор и верстка в системе \LaTeX{}. \newblock --- 3-е издание, исправленное и дополненное, 2003 г.
 \bibitem{Voroncov-2005}Воронцов К.В. \LaTeX{} в примерах. 2005 г.
 \end{thebibliography}
